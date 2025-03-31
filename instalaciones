@@ -1,0 +1,2 @@
+npm install -g json-server@0.17.4
+npm install --save-dev nodemon

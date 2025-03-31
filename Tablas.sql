@@ -2,6 +2,9 @@ show databases;
 
 use node_adso2894667;
 
+drop table if exists categorias;
+drop table if exists productos;
+
 create table categorias(
 id int auto_increment primary key,
 nombre varchar(255) not null,
@@ -26,4 +29,10 @@ insert into categorias (nombre, descripcion) values
 ("Ropa", "Para prendas de vestir"),
 ("Alimentos", "Para productos alimenticios");
 
+insert into productos (nombre, descripcion, precio, categoria_id) values
+("Laptop Lenovo", "Laptop con procesador Intel Core i5 y 8GB de RAM", 2500000, 1),
+("Camiseta de algodón", "Camiseta unisex 100% algodón, color negro", 50000, 2),
+("Caja de galletas", "Galletas surtidas de chocolate y vainilla", 10000, 3);
+
 select * from categorias;
+select * from productos;

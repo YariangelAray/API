@@ -3,11 +3,18 @@ import Categoria from "../Models/Categoria.js";
 class CategoriaController{
 
   static getAllCategorias = async (req, res) => {
-    const objCategoria = new Categoria();
 
-    const categorias = await objCategoria.getAll();
+    try {
 
-    res.json(categorias); 
+      const objCategoria = new Categoria();
+
+      const categorias = await objCategoria.getAll();
+
+      res.json(categorias); 
+      
+    } catch (error) {
+      res.status(500).json({error: error.message});
+    }
   }
 
   static createCategoria = async (req, res) => {

@@ -15,16 +15,18 @@ class Categoria{
   async getAll() {
     try {
       //Accedemos a la primera posición del arreglo retornado por la conección
-      const [rows] = await connection.query("SELECT * FROM categorias"); //Enviamos el código SQL
+      const [rows] = await connection.query("SELECT * FROM categorias"); //Enviamos el código SQL      
       return rows;
 
     } catch (error) {
+      //Lanzamos un error perzonalido
       throw new Error("Error al obtener las categorías.")
     }
   }
 
   async create() {
     try {      
+
       const [result] = await connection.query(`INSERT INTO categorias (nombre, descripcion) VALUES ( ?, ?)`, [this.nombre, this.descripcion]);  
       
       return {
