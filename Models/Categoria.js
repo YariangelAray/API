@@ -60,17 +60,24 @@ class Categoria{
     }
   }
 
-  async updatePatch(id, propiedad, valor) {
+  async updatePatch(id, propiedades) {
     try {
-      const [result] = await connection.query(`UPDATE categorias SET ${propiedad} = ? WHERE id = ?`, [valor, id]);
+
+      let sentencia = "";
+      for (const key in propiedades) {        
+        sentencia += `${key} = "${propiedades[key]}", `;
+      }            
+      sentencia = sentencia.trim().slice(0, -1);   
+      
+      const [result] = await connection.query(`UPDATE categorias SET ${sentencia} WHERE id = ?`, [id]);
 
       if (result.affectedRows === 0) {
         throw new Error("Categoría no encontrada.");
       }
 
     } catch (error) {
-      // throw new Error (error.message)
-      throw new Error(`Error al actualizar la propiedad '${propiedad}' de la categoría.`);
+      throw new Error (error.message)
+      // throw new Error(`Error al actualizar la categoría.`);
     }
   }
 

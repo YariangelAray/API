@@ -37,6 +37,8 @@ class CategoriaController{
     try {
       const { id } = req.params;
       const { nombre, descripcion } = req.body;
+      
+      console.log(req)
   
       const objCategoria = new Categoria();
       const categoria = await objCategoria.update(id, nombre, descripcion);
@@ -55,11 +57,8 @@ class CategoriaController{
       const propiedades = req.body;
   
       const objCategoria = new Categoria();
-                
-      for (const key in propiedades) {
-        console.log(key, propiedades[key]);        
-        await objCategoria.updatePatch(id, key, propiedades[key]);
-      }
+       
+      await objCategoria.updatePatch(id, propiedades);
 
       res.status(201).json({ mensaje: "Categoria actualizada" });
       
