@@ -1,14 +1,14 @@
 import express from "express";
 import CategoriaController from "../controller/CategoriaController.js";
+import { validarCategoria } from "../middlewares/validarCategoria.js";
+
 
 const router = express.Router();
 
 router.get('/' , CategoriaController.getAllCategorias);
 
-router.post('/', CategoriaController.createCategoria);
+router.post('/', validarCategoria ,CategoriaController.createCategoria);
 
-router.put('/:id', (req, res) => {
-  console.log(req.body);
-});
+router.put('/:id', CategoriaController.updateCategoria);
 
 export default router;

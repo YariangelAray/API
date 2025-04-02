@@ -14,5 +14,5 @@ app.use("/categorias", categoriaRoutes);
 app.use("/productos", productoRoutes);
 
 app.listen(3000, () => {
-  console.log("Hola");  
+  console.log("Server is running...");  
 });

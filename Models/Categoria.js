@@ -20,14 +20,14 @@ class Categoria{
 
     } catch (error) {
       //Lanzamos un error perzonalido
-      throw new Error("Error al obtener las categorías.")
+      throw new Error("Error al obtener las categorías.");
     }
   }
 
   async create() {
     try {      
 
-      const [result] = await connection.query(`INSERT INTO categorias (nombre, descripcion) VALUES ( ?, ?)`, [this.nombre, this.descripcion]);  
+      const [result] = await connection.query("INSERT INTO categorias (nombre, descripcion) VALUES ( ?, ?)", [this.nombre, this.descripcion]);  
       
       return {
         id: result.id,
@@ -36,7 +36,23 @@ class Categoria{
       };
 
     } catch (error) {
-      throw new Error("Error al crear la categoría.")
+      throw new Error("Error al crear la categoría.");
+    }
+  }
+
+  async update(id) {
+    try {
+      
+      const [result] = await connection.query("UPDATE categorias SET nombre=?, descripcion=? WHERE id=?", [this.nombre, this.descripcion, id]);
+
+      return {
+        id: result.id,
+        nombre: this.nombre,
+        descripcion: this.descripcion
+      };
+
+    } catch (error) {
+      throw new Error("Error al actualizar la categoría.");
     }
   }
 }
