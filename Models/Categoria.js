@@ -2,10 +2,10 @@ import connection from "../utils/db.js";
 
 class Categoria{
 
-  constructor(nombre, descripcion) {
-    this.nombre = nombre;
-    this.descripcion = descripcion;
-  }
+  // constructor(nombre, descripcion) {
+  //   nombre = nombre;
+  //   descripcion = descripcion;
+  // }
   
   /**
    * Método para obtener los registros de la base de datos
@@ -24,15 +24,15 @@ class Categoria{
     }
   }
 
-  async create() {
+  async create(nombre, descripcion) {
     try {      
 
-      const [result] = await connection.query("INSERT INTO categorias (nombre, descripcion) VALUES ( ?, ?)", [this.nombre, this.descripcion]);  
+      const [result] = await connection.query("INSERT INTO categorias (nombre, descripcion) VALUES ( ?, ?)", [nombre, descripcion]);  
       
       return {
         id: result.id,
-        nombre: this.nombre,
-        descripcion: this.descripcion
+        nombre: nombre,
+        descripcion: descripcion
       };
 
     } catch (error) {
@@ -40,15 +40,19 @@ class Categoria{
     }
   }
 
-  async update(id) {
+  async update(id, nombre, descripcion) {
     try {
       
-      const [result] = await connection.query("UPDATE categorias SET nombre=?, descripcion=? WHERE id=?", [this.nombre, this.descripcion, id]);
+      const [result] = await connection.query("UPDATE categorias SET nombre = ?, descripcion = ? WHERE id = ?", [nombre, descripcion, id]);
+
+      if (result.affectedRows === 0) {
+        throw new Error("Categoría no encontrada.");
+      }
 
       return {
-        id: result.id,
-        nombre: this.nombre,
-        descripcion: this.descripcion
+        id: id,
+        nombre: nombre,
+        descripcion: descripcion
       };
 
     } catch (error) {
@@ -56,11 +60,29 @@ class Categoria{
     }
   }
 
+  async updatePatch(id, propiedad, valor) {
+    try {
+      const [result] = await connection.query(`UPDATE categorias SET ${propiedad} = ? WHERE id = ?`, [valor, id]);
+
+      if (result.affectedRows === 0) {
+        throw new Error("Categoría no encontrada.");
+      }
+
+    } catch (error) {
+      // throw new Error (error.message)
+      throw new Error(`Error al actualizar la propiedad '${propiedad}' de la categoría.`);
+    }
+  }
+
   async delete(id) {
     try {
       
-      await connection.query("DELETE FROM categorias where id=?", [id]);
+      const [result] = await connection.query("DELETE FROM categorias where id=?", [id]);
       
+      if (result.affectedRows === 0) {
+        throw new Error("Categoría no encontrada.");
+      }
+
       return;
 
     } catch (error) {

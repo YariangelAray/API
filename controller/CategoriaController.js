@@ -23,8 +23,8 @@ class CategoriaController{
     try {
       const { nombre, descripcion } = req.body;
   
-      const objCategoria = new Categoria(nombre, descripcion);
-      const categoria = await objCategoria.create();
+      const objCategoria = new Categoria();
+      const categoria = await objCategoria.create(nombre, descripcion);
       
       res.status(201).json({mensaje: "Categoria creada", categoria: categoria});
 
@@ -37,14 +37,9 @@ class CategoriaController{
     try {
       const { id } = req.params;
       const { nombre, descripcion } = req.body;
-
-      const [categoriaExist] = await connection.query("SELECT * FROM categorias WHERE id = ?", [id]);
-      if(categoriaExist.length === 0) {
-          return res.status(404).json({ error: "Error al actualizar la categoría" });
-      }
   
-      const objCategoria = new Categoria(nombre, descripcion);
-      const categoria = await objCategoria.update(id);
+      const objCategoria = new Categoria();
+      const categoria = await objCategoria.update(id, nombre, descripcion);
       
       res.status(201).json({mensaje: "Categoria actualizada", categoria: categoria});
 
@@ -53,14 +48,29 @@ class CategoriaController{
     }
   }
 
-  static deleteCategoria = async (req, res) => {
+  static updateParcialCategoria = async (req, res) => {
     try {
       const { id } = req.params;
 
-      const [categoriaExist] = await connection.query("SELECT * FROM categorias WHERE id = ?", [id]);
-      if(categoriaExist.length === 0) {
-          return res.status(404).json({ error: "Error al eliminar la categoría" });
+      const propiedades = req.body;
+  
+      const objCategoria = new Categoria();
+                
+      for (const key in propiedades) {
+        console.log(key, propiedades[key]);        
+        await objCategoria.updatePatch(id, key, propiedades[key]);
       }
+
+      res.status(201).json({ mensaje: "Categoria actualizada" });
+      
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }  
+  }
+
+  static deleteCategoria = async (req, res) => {
+    try {
+      const { id } = req.params;
 
       const objCategoria = new Categoria();
       await objCategoria.delete(id);
@@ -71,6 +81,7 @@ class CategoriaController{
       res.status(500).json({ error: error.message });
     }
   }
+  
   
 }
 

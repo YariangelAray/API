@@ -23,14 +23,18 @@ class Producto{
 
     async create() {
         try {
-            const [result] = await connection.query("INSERT INTO productos (nombre, descripcion, precio, categoria_id) VALUES (?, ?, ?, ?)", [this.nombre, this.descripcion, this.precio, this.categoria_id]);
+          const [result] = await connection.query("INSERT INTO productos (nombre, descripcion, precio, categoria_id) VALUES (?, ?, ?, ?)", [this.nombre, this.descripcion, this.precio, this.categoria_id]);
+          
+          if (result.affectedRows === 0) {
+            throw new Error("Categoría inexistente.");
+          }
 
-            return { 
-                id: result.id,
-                nombre: this.nombre,
-                descripcion: this.descripcion,
-                precio: this.precio,
-                categoria_id: this.categoria_id };
+          return { 
+            id: result.id,
+            nombre: this.nombre,
+            descripcion: this.descripcion,
+            precio: this.precio,
+            categoria_id: this.categoria_id };
 
         } catch (error) {
             throw new Error("Error al crear el producto.");

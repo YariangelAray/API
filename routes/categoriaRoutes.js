@@ -13,4 +13,6 @@ router.put('/:id', validarCategoria, CategoriaController.updateCategoria);
 
 router.delete('/:id', CategoriaController.deleteCategoria);
 
+router.patch('/:id', CategoriaController.updateParcialCategoria);
+
 export default router;
