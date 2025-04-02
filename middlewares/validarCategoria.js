@@ -1,4 +1,4 @@
-export const validarCategoria = (req, res) => {  
+export const validarCategoria = (req, res, next) => {  
 
   const { nombre, descripcion } = req.body;
 
@@ -8,4 +8,6 @@ export const validarCategoria = (req, res) => {
   if (descripcion.trim() === "" || !descripcion) {
     return res.status(400).json({ mensaje: "La descripción en la categoría es obligatorio" });
   }
+
+  next();
 }

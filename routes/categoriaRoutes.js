@@ -9,6 +9,8 @@ router.get('/' , CategoriaController.getAllCategorias);
 
 router.post('/', validarCategoria ,CategoriaController.createCategoria);
 
-router.put('/:id', CategoriaController.updateCategoria);
+router.put('/:id', validarCategoria, CategoriaController.updateCategoria);
+
+router.delete('/:id', CategoriaController.deleteCategoria);
 
 export default router;
