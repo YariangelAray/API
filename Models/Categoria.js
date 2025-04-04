@@ -76,8 +76,8 @@ class Categoria{
       }
 
     } catch (error) {
-      throw new Error (error.message)
-      // throw new Error(`Error al actualizar la categoría.`);
+      // throw new Error (error.message)
+      throw new Error(`Error al actualizar la categoría.`);
     }
   }
 

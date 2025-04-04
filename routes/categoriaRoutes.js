@@ -11,8 +11,8 @@ router.post('/', validarCategoria ,CategoriaController.createCategoria);
 
 router.put('/:id', validarCategoria, CategoriaController.updateCategoria);
 
-router.delete('/:id', CategoriaController.deleteCategoria);
-
 router.patch('/:id', CategoriaController.updateParcialCategoria);
+
+router.delete('/:id', CategoriaController.deleteCategoria);
 
 export default router;

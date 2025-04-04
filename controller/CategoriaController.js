@@ -1,5 +1,4 @@
 import Categoria from "../Models/Categoria.js";
-import connection from "../utils/db.js";
 
 class CategoriaController{
 
@@ -36,9 +35,7 @@ class CategoriaController{
   static updateCategoria = async (req, res) => {
     try {
       const { id } = req.params;
-      const { nombre, descripcion } = req.body;
-      
-      console.log(req)
+      const { nombre, descripcion } = req.body;          
   
       const objCategoria = new Categoria();
       const categoria = await objCategoria.update(id, nombre, descripcion);

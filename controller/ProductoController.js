@@ -1,5 +1,4 @@
 import Producto from "../Models/Producto.js";
-import connection from "../utils/db.js";
 
 class ProductoController{
 
@@ -23,13 +22,58 @@ class ProductoController{
     try {
       const { nombre, descripcion, precio, categoria_id } = req.body;
   
-      const objProducto = new Producto(nombre, descripcion, precio, categoria_id);
-      const producto = await objProducto.create();
+      const objProducto = new Producto();
+      const producto = await objProducto.create(nombre, descripcion, precio, categoria_id);
       
-      res.status(201).json(producto);
+      res.status(201).json({mensaje: "Producto creado", producto: producto});
 
     } catch (error) {
       res.status(500).json({error: error.message});
+    }
+  }
+
+  static updateProducto = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { nombre, descripcion, precio, categoria_id } = req.body;
+  
+      const objProducto = new Producto();
+      const producto = await objProducto.update(id, nombre, descripcion, precio, categoria_id);
+      
+      res.status(201).json({mensaje: "Producto actualizada", precio: producto});
+
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  static updateParcialProducto = async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const propiedades = req.body;
+  
+      const objProducto = new Producto();
+        
+      await objProducto.updatePatch(id, propiedades);
+
+      res.status(201).json({ mensaje: "Producto actualizado" });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  static deleteProducto = async (req, res) => {
+    try {
+      const { id } = req.params;
+  
+      const objProducto = new Producto();
+        
+      await objProducto.delete(id);
+
+      res.status(201).json({ mensaje: "Producto eliminado" });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
     }
   }
 }

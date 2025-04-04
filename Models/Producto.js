@@ -2,12 +2,12 @@ import connection from "../utils/db.js";
 
 class Producto{
 
-    constructor(nombre, descripcion, precio, categoria_id){
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.precio = precio;
-        this.categoria_id = categoria_id;
-    }
+    // constructor(nombre, descripcion, precio, categoria_id){
+    //     this.nombre = nombre;
+    //     this.descripcion = descripcion;
+    //     this.precio = precio;
+    //     this.categoria_id = categoria_id;
+    // }
 
     async getAll() {
         try {
@@ -21,9 +21,9 @@ class Producto{
         }
     }
 
-    async create() {
+    async create(nombre, descripcion, precio, categoria_id) {
         try {
-          const [result] = await connection.query("INSERT INTO productos (nombre, descripcion, precio, categoria_id) VALUES (?, ?, ?, ?)", [this.nombre, this.descripcion, this.precio, this.categoria_id]);
+          const [result] = await connection.query("INSERT INTO productos (nombre, descripcion, precio, categoria_id) VALUES (?, ?, ?, ?)", [nombre, descripcion, precio, categoria_id]);
           
           if (result.affectedRows === 0) {
             throw new Error("Categoría inexistente.");
@@ -31,13 +31,65 @@ class Producto{
 
           return { 
             id: result.id,
-            nombre: this.nombre,
-            descripcion: this.descripcion,
-            precio: this.precio,
-            categoria_id: this.categoria_id };
+            nombre: nombre,
+            descripcion: descripcion,
+            precio: precio,
+            categoria_id: categoria_id };
 
         } catch (error) {
             throw new Error("Error al crear el producto.");
+        }
+    }
+
+    async update (id, nombre, descripcion, precio, categoria_id){
+        try {
+            const [result] = await connection.query("UPDATE productos SET nombre = ?, descripcion = ?, precio = ?, categoria_id = ? WHERE id = ?", [nombre, descripcion, precio, categoria_id, id]);
+
+            if (result.affectedRows === 0) {
+                throw new Error("Producto no encontrado.");
+            }
+
+            return { 
+                id: id,
+                nombre: nombre,
+                descripcion: descripcion,
+                precio: precio,
+                categoria_id: categoria_id };
+
+        } catch (error) {
+            throw new Error("Error al actualizar el producto.");
+        }
+    }
+
+    async updatePatch(id, propiedades) {
+        try {
+            let sentencia = "";
+            for (const key in propiedades) {        
+                sentencia += `${key} = "${propiedades[key]}", `;
+            }            
+            sentencia = sentencia.trim().slice(0, -1);   
+            
+            const [result] = await connection.query(`UPDATE productos SET ${sentencia} WHERE id = ?`, [id]);
+
+            if (result.affectedRows === 0) {
+                throw new Error("Producto no encontrado.");
+            }
+
+        } catch (error) {
+            throw new Error("Error al actualizar el producto.");
+        }
+    }
+
+    async delete(id){
+        try {
+            const [result] = await connection.query("DELETE FROM productos WHERE id = ?", [id]);
+
+            if (result.affectedRows === 0) {
+                throw new Error("Producto no encontrado.");
+            }
+
+        } catch (error) {
+            throw new Error("Error al eliminar el producto.");
         }
     }
 }
