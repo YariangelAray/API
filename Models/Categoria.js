@@ -66,6 +66,10 @@ class Categoria{
   async updatePatch(id, propiedades) {
     try {
 
+      if (Object.keys(propiedades).length === 0) {
+        throw new Error("No se han enviado propiedades para actualizar.");        
+      }
+
       let sentencia = "";
       // Recorremos las propiedades y creamos la sentencia SQL
       for (const key in propiedades) {        

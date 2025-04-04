@@ -64,6 +64,10 @@ class Producto{
     async updatePatch(id, propiedades) {
         try {
 
+            if (Object.keys(propiedades).length === 0) {
+                throw new Error("No se han enviado propiedades para actualizar.");                
+            }
+
             let sentencia = "";
             // Recorremos el objeto propiedades y construimos la sentencia SQL
             // para actualizar solo los campos que se han enviado
