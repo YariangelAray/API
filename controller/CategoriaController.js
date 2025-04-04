@@ -2,6 +2,7 @@ import Categoria from "../Models/Categoria.js";
 
 class CategoriaController{
 
+  // Método para obtener todas las categorías
   static getAllCategorias = async (req, res) => {
 
     try {
@@ -17,6 +18,7 @@ class CategoriaController{
     }
   }
 
+  // Método para crear una categoria 
   static createCategoria = async (req, res) => {
     
     try {
@@ -32,6 +34,7 @@ class CategoriaController{
     }
   }
 
+  // Método para actualizar una categoria
   static updateCategoria = async (req, res) => {
     try {
       const { id } = req.params;
@@ -47,6 +50,7 @@ class CategoriaController{
     }
   }
 
+  
   static updateParcialCategoria = async (req, res) => {
     try {
       const { id } = req.params;
@@ -69,9 +73,9 @@ class CategoriaController{
       const { id } = req.params;
 
       const objCategoria = new Categoria();
-      await objCategoria.delete(id);
+      await objCategoria.delete(id);      
       
-      res.status(201).json({ mensaje: "Categoria eliminada"});
+      res.status(201).json({ mensaje: "Categoria eliminada con exito." });
 
     } catch (error) {
       res.status(500).json({ error: error.message });
