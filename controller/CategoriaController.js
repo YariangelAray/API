@@ -18,6 +18,24 @@ class CategoriaController{
     }
   }
 
+  // Obtener categoria por id
+
+  static getCategoriaById = async (req, res) => {
+    try {
+
+      const { id } = req.params;
+
+      const objCategoria = new Categoria();
+
+      const categoria = await objCategoria.getById(id);
+
+      res.json(categoria);    
+
+    } catch (error) {
+      res.status(500).json({error: error.message});
+    }
+  }
+
   // Método para crear una categoria 
   static createCategoria = async (req, res) => {
     

@@ -4,7 +4,8 @@ import { validarProducto } from "../middlewares/validarProducto.js";
 
 const router = express.Router();
 
-router.get('/' , ProductoController.getAllProductos);
+router.get('/', ProductoController.getAllProductos);
+
 
 router.post('/', validarProducto, ProductoController.createProducto)
 

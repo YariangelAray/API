@@ -15,13 +15,52 @@ class Categoria{
   async getAll() {
     try {
       
-      const [rows] = await connection.query("SELECT * FROM categorias");  
-      return rows;
+      const [rows] = await connection.query("SELECT * FROM categorias");
+
+      const categorias = await this.agregarProductos(rows);
+
+      return categorias;
 
     } catch (error) {
       //Lanzamos un error perzonalido
       throw new Error("Error al obtener las categorías.");
     }
+  }
+
+  // Método para obtener categoria por id
+
+  async getById(id) {
+    try {
+      
+      const [row] = await connection.query("SELECT * FROM categorias WHERE id = ?", [id]);
+      
+      if (row.length === 0) throw new Error("Categoría no encontrada.");      
+
+      const categoria = this.agregarProductos(row);
+
+      return categoria;
+
+    } catch (error) {
+      //Lanzamos un error perzonalido
+      throw new Error(error.message || "Error al obtener la categoría.");
+    }
+  }
+
+  // Método para btener los productos de una categoria
+  async getProductosByIdCategoria(categoriaId) {
+    const [productos] = await connection.query("SELECT * FROM productos WHERE categoria_id = ?", [categoriaId]);  
+    return productos;
+  }
+
+  // Agregar productos a una categoria
+  async agregarProductos(categorias) {
+    return Promise.all(categorias.map(async (categoria) => {
+        const productos = await this.getProductosByIdCategoria(categoria.id);
+
+        categoria.productos = productos;
+
+        return categoria;
+      }));
   }
 
   // Método para crear una categoría
@@ -47,9 +86,8 @@ class Categoria{
       const [result] = await connection.query("UPDATE categorias SET nombre = ?, descripcion = ? WHERE id = ?", [nombre, descripcion, id]);
 
       // Si no se actualizó ningún registro, lanzamos un error
-      if (result.affectedRows === 0) {
-        throw new Error("Categoría no encontrada.");
-      }
+      if (result.affectedRows === 0) throw new Error("Categoría no encontrada.");
+      
 
       return {
         id,
@@ -81,9 +119,7 @@ class Categoria{
       const [result] = await connection.query(`UPDATE categorias SET ${sentencia} WHERE id = ?`, [id]);
 
       // Si no se actualizó ningún registro, lanzamos un error
-      if (result.affectedRows === 0) {
-        throw new Error("Categoría no encontrada.");
-      }
+      if (result.affectedRows === 0) throw new Error("Categoría no encontrada.");
 
     } catch (error) {
       throw new Error (error.message || "Error al actualizar la categoría.");
@@ -91,32 +127,22 @@ class Categoria{
     }
   }
 
-  // Método para verificar si la categoría tiene productos relacionados
-  async relacionConProductos(categoriaId) {    
-      const [productos] = await connection.query("SELECT * FROM productos WHERE categoria_id = ?", [categoriaId]);      
-      
-      return productos.length > 0;
-      
-  }
-
   // Método para eliminar una categoría
   async delete(id) {
     try {
 
       // Verificamos si la categoría tiene productos relacionados
-      const relacion = await this.relacionConProductos(id);
+      const productos = await this.getProductosByIdCategoria(id);
 
       // Si tiene el resultado es true, lanzamos un error
-      if (relacion){
+      if (productos.length > 0){
         throw new Error("No se puede eliminar la categoría porque tiene productos relacionados.");
       }
       
       const [result] = await connection.query("DELETE FROM categorias where id=?", [id]);      
       
       // Si no se eliminó ningún registro, lanzamos un error
-      if (result.affectedRows === 0) {
-        throw new Error("Categoría no encontrada.");
-      }
+      if (result.affectedRows === 0) throw new Error("Categoría no encontrada.");    
 
       return;
 

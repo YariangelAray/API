@@ -2,8 +2,8 @@ show databases;
 
 use node_adso2894667;
 
-drop table if exists categorias;
 drop table if exists productos;
+drop table if exists categorias;
 
 create table categorias(
 id int auto_increment primary key,
@@ -35,4 +35,11 @@ insert into productos (nombre, descripcion, precio, categoria_id) values
 ("Caja de galletas", "Galletas surtidas de chocolate y vainilla", 10000, 3);
 
 select * from categorias;
+
+select * from productos where categoria_id = 2;
+
 select * from productos;
+
+select p.id, p.nombre, p.descripcion, p.precio, c.nombre as categoria 
+from categorias c inner join productos p 
+on c.id = categoria_id and categoria_id = 1;
