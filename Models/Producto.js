@@ -22,6 +22,12 @@ class Producto{
         }
     }
 
+    // Método para btener los productos de una categoria
+    async getProductosByIdCategoria(categoriaId) {
+        const [productos] = await connection.query("SELECT * FROM productos WHERE categoria_id = ?", [categoriaId]);  
+        return productos;
+    }
+
     // Método para crear un producto
     async create(nombre, descripcion, precio, categoria_id) {
         try {

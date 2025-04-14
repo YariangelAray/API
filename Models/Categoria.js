@@ -15,14 +15,11 @@ class Categoria{
   async getAll() {
     try {
       
-      const [rows] = await connection.query("SELECT * FROM categorias");
-
-      const categorias = await this.agregarProductos(rows);
+      const [categorias] = await connection.query("SELECT * FROM categorias");
 
       return categorias;
 
-    } catch (error) {
-      //Lanzamos un error perzonalido
+    } catch (error) {      
       throw new Error("Error al obtener las categorías.");
     }
   }
@@ -32,11 +29,9 @@ class Categoria{
   async getById(id) {
     try {
       
-      const [row] = await connection.query("SELECT * FROM categorias WHERE id = ?", [id]);
+      const [categoria] = await connection.query("SELECT * FROM categorias WHERE id = ?", [id]);
       
-      if (row.length === 0) throw new Error("Categoría no encontrada.");      
-
-      const categoria = this.agregarProductos(row);
+      if (categoria.length === 0) throw new Error("Categoría no encontrada.");
 
       return categoria;
 
@@ -44,23 +39,6 @@ class Categoria{
       //Lanzamos un error perzonalido
       throw new Error(error.message || "Error al obtener la categoría.");
     }
-  }
-
-  // Método para btener los productos de una categoria
-  async getProductosByIdCategoria(categoriaId) {
-    const [productos] = await connection.query("SELECT * FROM productos WHERE categoria_id = ?", [categoriaId]);  
-    return productos;
-  }
-
-  // Agregar productos a una categoria
-  async agregarProductos(categorias) {
-    return Promise.all(categorias.map(async (categoria) => {
-        const productos = await this.getProductosByIdCategoria(categoria.id);
-
-        categoria.productos = productos;
-
-        return categoria;
-      }));
   }
 
   // Método para crear una categoría
