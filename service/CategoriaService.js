@@ -22,8 +22,8 @@ class CategoriaService{
             const categorias = await objCategoria.getAll();
             const categoriasConProductos = await this.agregarProductos(categorias);
             return categoriasConProductos;
-        } catch (error) {            
-            throw new Error(error.message);            
+        } catch (error) {
+            throw new Error(error.message);
         }
     }
 
@@ -34,8 +34,8 @@ class CategoriaService{
             const categoria = await objCategoria.getById(id);
             const categoriaConProductos = await this.agregarProductos(categoria);
             return categoriaConProductos[0];
-        } catch (error) {            
-            throw new Error(error.message);            
+        } catch (error) {
+            throw new Error(error.message);
         }
     }
 }

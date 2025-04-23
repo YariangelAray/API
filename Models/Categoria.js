@@ -1,4 +1,5 @@
 import connection from "../utils/db.js";
+import Producto from "./Producto.js";
 
 class Categoria{
 
@@ -109,8 +110,10 @@ class Categoria{
   async delete(id) {
     try {
 
+      const objProducto = new Producto();
+
       // Verificamos si la categoría tiene productos relacionados
-      const productos = await this.getProductosByIdCategoria(id);
+      const productos = await objProducto.getProductosByIdCategoria(id);
 
       // Si tiene el resultado es true, lanzamos un error
       if (productos.length > 0){
